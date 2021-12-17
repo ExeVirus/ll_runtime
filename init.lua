@@ -18,11 +18,11 @@ ll_runtime = {} --global table for other dependent mod access
 local handle = nil
 ll_runtime.register_level = function(mts_location, num, name, start, num_stars, image, formspec, music)
     handle = minetest.register_schematic(mts_location)
-    if handle ~= nil then
+    --if handle ~= nil then
         table.insert(levels, {num=num, name=name, scheme=mts_location, start=start, num_stars = num_stars, image=image, formspec=formspec, music=music})
-    else
-        error("File: " .. mts_location .. "was unable to load properly, quitting")
-    end
+    --else
+        --error("File: " .. mts_location .. "was unable to load properly, quitting")
+    --end
 end
 
 -------------------
@@ -142,9 +142,7 @@ minetest.register_on_joinplayer(function(player)
         }
     ))
 -- 3. Display the main Menu
-    --minetest.show_formspec(player:get_player_name(),"menu",main_menu())
-    loaded_level = 1
-    load_level(player)
+    minetest.show_formspec(player:get_player_name(),"menu",main_menu())
 -- 4. Play the main menu music
     play_music("theme")
 end)
@@ -169,9 +167,9 @@ main_menu = function(scroll_in)
     }
     for i=1, #levels, 1 do
         if i <= current_level then
-            table.insert(r,"image_button[0.25,".. (i-1)*2+0.15 ..";1.5,1.5;"..levels[i].image..".png;level"..i..";"..levels[i].name.."]")
+            table.insert(r,"image_button[1.1,".. (i-1)*2+0.1 ..";1.8,1.8;"..levels[i].image..".png;level"..i..";"..levels[i].name.."]")
         else
-            table.insert(r,"image[0.25,".. (i-1)*2+0.15 ..";1.5,1.5;"..levels[i].image..".png^[colorize:#000:50;]")
+            table.insert(r,"image[1.1,".. (i-1)*2+0.1 ..";1.8,1.8;"..levels[i].image..".png^[colorize:#000:170]")
         end
     end
     table.insert(r,"scroll_container_end[]")
@@ -194,6 +192,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
                 loaded_level = tonumber(string.sub(fieldtext,6,-1))
                 if levels[loaded_level] ~= nil and loaded_level <= current_level then
                     load_level(player)
+                    minetest.close_formspec(player:get_player_name(),"menu")
                 else
                     loaded_level = nil
                 end
