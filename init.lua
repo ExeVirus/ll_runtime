@@ -15,10 +15,11 @@ local levels = {} -- table of registered levels to load
 ll_runtime = {} --global table for other dependent mod access
 
 -- Add register_level
+local handle = nil
 ll_runtime.register_level = function(mts_location, num, name, start, num_stars, image, formspec, music)
-    local handle = minetest.register_schematic("mts_location")
+    handle = minetest.register_schematic(mts_location)
     if handle ~= nil then
-        table.insert(levels, {num=num, name=name, scheme=handle, start=start, num_stars = num_stars, image=image, formspec=formspec, music=music})
+        table.insert(levels, {num=num, name=name, scheme=mts_location, start=start, num_stars = num_stars, image=image, formspec=formspec, music=music})
     else
         error("File: " .. mts_location .. "was unable to load properly, quitting")
     end
@@ -142,6 +143,7 @@ minetest.register_on_joinplayer(function(player)
     ))
 -- 3. Display the main Menu
     --minetest.show_formspec(player:get_player_name(),"menu",main_menu())
+    loaded_level = 1
     load_level(player)
 -- 4. Play the main menu music
     play_music("theme")
@@ -236,15 +238,15 @@ load_level = function(player)
         text      = "Loading...",
         scale     = { x = 100, y = 100},
         alignment = { x = 0, y = 0 },
-        number = primary_c,
+        number = tonumber(primary_c),
         size = {x=5}
     })
     --  1. Load schematic <num>.mts at 0,0,0 position
-    minetest.place_schematic({x=0,y=0,z=0}, levels[loaded_level].schem, "0", nil, true, nil})
+    minetest.place_schematic( {x=0,y=0,z=0}, levels[loaded_level].scheme, "random", {}, true, nil)
     --  2. Show formspec to read while loading
-    minetest.show_formspec(player:get_player_name(),"level",level[loaded_level].formspec)
-    --  3. Wait an arbitrary amount of time, say 8 seconds (for now)
-    mientest.after(8, function(player)
+    --minetest.show_formspec(player:get_player_name(),"level",levels[loaded_level].formspec)
+    --  3. Wait an arbitrary amount of time, say 4 seconds (for now)
+    minetest.after(1, function(player)
         player:hud_remove(HUD.loading_back)
         player:hud_remove(HUD.loading_text)
     end, player)
