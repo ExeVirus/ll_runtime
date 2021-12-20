@@ -146,7 +146,7 @@ minetest.register_on_joinplayer(function(player)
             "hypertext[2,4;4,4.75;;<global halign=center color=",primary_c," size=32 font=Regular>Credits<global halign=center color=",on_secondary_c," size=16 font=Regular>\n",
             "Original Game by ExeVirus\n",
             "Source code is MIT License, 2021\n",
-            "Media/Music is:\nCC-BY-SA, ExeVirus 2021\n",
+            "Media/Music is:\nSee LICENSE Files\n",
             "Music coming to Spotify and other streaming services!\n]",
         }
     ))
