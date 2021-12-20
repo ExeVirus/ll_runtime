@@ -278,7 +278,7 @@ load_level = function(player)
     --  2. Show formspec to read while loading
     minetest.show_formspec(player:get_player_name(),"level",levels[loaded_level].formspec)
     --  3. Wait an arbitrary amount of time, scaled by level size
-    local time_to_load = levels[loaded_level].size.x * levels[loaded_level].size.y * levels[loaded_level].size.z / 1800
+    local time_to_load = levels[loaded_level].size.x * levels[loaded_level].size.z / 200
     minetest.after(time_to_load, function(player)
         time_since_start = 0
 
@@ -448,6 +448,7 @@ minetest.register_globalstep(function(dtime)
                 --minetest.chat_send_player("singleplayer", "Drowning!")
             else
                 -- When player is inside a star, remove the star, make a sound, increment the star counter, and if enough stars have been collected, win_level
+                pos.y = pos.y + 0.2
                 node = minetest.get_node(pos)
                 if node.name == "lady_assets:star" then
                     minetest.remove_node(pos)
