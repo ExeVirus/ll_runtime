@@ -32,7 +32,7 @@ local music_handle = nil
 local function play_music(filename)
     --Close the previous music
     if music_handle ~= nil then
-        minetest.sound_fade(music_handle, 0.7, 0) --fast fade
+        minetest.sound_stop(music_handle) --fast fade
     end
     -- Play the new music
     music_handle = minetest.sound_play(filename, {loop=true}) --loop until close
@@ -152,8 +152,6 @@ minetest.register_on_joinplayer(function(player)
     ))
 -- 3. Display the main Menu
     minetest.show_formspec(player:get_player_name(),"menu",main_menu())
--- 4. Play the main menu music
-    play_music("theme")
 end)
 
 -- Function display_main_menu()
@@ -196,6 +194,7 @@ main_menu = function(scroll_in)
     table.insert(r,"scroll_container_end[]")
     table.insert(r,"scrollbaroptions[max="..tostring((#levels - 4) * 10)..";thumbsize="..tostring((#levels - 5) * 2.5).."]")
     table.insert(r,"scrollbar[8.6,1.9;0.5,8.2;vertical;scroll;"..tostring(scroll).."]")
+    play_music("theme")
     return table.concat(r)
 end
 
@@ -277,6 +276,7 @@ load_level = function(player)
     minetest.place_schematic( {x=0,y=0,z=0}, levels[loaded_level].scheme, "0", {}, true, nil)
     --  2. Show formspec to read while loading
     minetest.show_formspec(player:get_player_name(),"level",levels[loaded_level].formspec)
+    play_music(levels[loaded_level].music)
     --  3. Wait an arbitrary amount of time, scaled by level size
     local time_to_load = levels[loaded_level].size.x * levels[loaded_level].size.z / 200
     minetest.after(time_to_load, function(player)
