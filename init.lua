@@ -202,6 +202,7 @@ end
 --On receive
 -------------------
 minetest.register_on_player_receive_fields(function(player, formname, fields)
+    local scroll_in = nil
     if formname == "menu" then
         if fields.scroll then
             scroll_in = tonumber(minetest.explode_scrollbar_event(fields.scroll).value)
